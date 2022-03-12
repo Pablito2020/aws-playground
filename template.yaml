@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Practice 1
+Transform:
+  - AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Timeout: 30
+    MemorySize: 1024
+    Environment:
+      Variables:
+        USERNAME: Jordi
+        NODE_OPTIONS: --enable-source-maps
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+
+Resources:
+  HelloWorldLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-hello-world-lambda'
+      Handler: helloWorld.handler
+      CodeUri: dist/
+      Role: !GetAtt LambdaExecutionRole.Arn
+
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-BasicLambdaExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                lambda.amazonaws.com
+            Action:
+              sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole

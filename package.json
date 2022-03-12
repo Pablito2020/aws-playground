@@ -1,0 +1,17 @@
+{
+  "name": "university-practices",
+  "private": true,
+  "version": "0.71.0",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc --build tsconfig.json",
+    "clean": "rm -rf ./dist && rm -rf node_modules",
+    "lint": "eslint 'src/**/*.ts' --quiet --fix"
+  },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.93",
+    "aws-sdk": "^2.1091.0"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0"
+  }
+}

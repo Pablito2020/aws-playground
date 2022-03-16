@@ -19,9 +19,22 @@ Resources:
     Properties:
       FunctionName: !Sub '${AWS::StackName}-hello-world-lambda'
       Handler: helloWorld.handler
-      CodeUri: dist/
+      CodeUri: dist/practice1
       Role: !GetAtt LambdaExecutionRole.Arn
 
+  DynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}-dynamodb-table'
+      AttributeDefinitions:
+        - AttributeName: id # Partition key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role

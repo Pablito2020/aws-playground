@@ -14,15 +14,8 @@ Globals:
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 Resources:
-  HelloWorldLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub '${AWS::StackName}-hello-world-lambda'
-      Handler: helloWorld.handler
-      CodeUri: dist/practice1
-      Role: !GetAtt LambdaExecutionRole.Arn
 
-  DynamoDB:
+  Dynamodb:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub '${AWS::StackName}-dynamodb-table'
@@ -36,10 +29,10 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  LambdaExecutionRole:
+  LambdaWriteDynamodbRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${AWS::StackName}-BasicLambdaExecutionRole'
+      RoleName: !Sub '${AWS::StackName}-LambdaWriteDynamodbRole'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -52,3 +45,22 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: !Sub '${AWS::StackName}-LambdaWriteDynamodbPolicy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource:
+                  - !GetAtt Dynamodb.Arn
+
+  PutLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-put-dynamodb-lambda'
+      Handler: put.handler
+      CodeUri: dist/practice2
+      Role: !GetAtt LambdaWriteDynamodbRole.Arn
+

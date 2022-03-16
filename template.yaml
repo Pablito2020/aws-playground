@@ -56,6 +56,33 @@ Resources:
                 Resource:
                   - !GetAtt Dynamodb.Arn
 
+  LambdaDeleteDynamodbRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-LambdaDeleteDynamodbRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                lambda.amazonaws.com
+            Action:
+              sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: !Sub '${AWS::StackName}-LambdaWriteDynamodbPolicy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DeleteItem
+                Resource:
+                  - !GetAtt Dynamodb.Arn
+
   PutLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -64,3 +91,10 @@ Resources:
       CodeUri: dist/practice2
       Role: !GetAtt LambdaWriteDynamodbRole.Arn
 
+  DeleteLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-delete-dynamodb-lambda'
+      Handler: delete.handler
+      CodeUri: dist/practice2
+      Role: !GetAtt LambdaDeleteDynamodbRole.Arn

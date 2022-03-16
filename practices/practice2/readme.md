@@ -40,3 +40,8 @@ Given a delete event
 if found, delete the data
 
 
+## usefully links
+
+AWS SDK: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/index.html
+AWS DocumentClient for dynamodDB: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html
+AWS Dynamodb permissions: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/iam-policy-example-data-crud.html

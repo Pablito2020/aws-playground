@@ -2,7 +2,7 @@
 
 This repo will contain class activities
 
-##First steps
+## First steps
 Update samconfig.toml line
 
 ```

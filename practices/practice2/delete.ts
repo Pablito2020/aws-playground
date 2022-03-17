@@ -1,10 +1,8 @@
 import { DynamoDB } from "aws-sdk";
 import { Context } from "aws-lambda";
 
-type ID = string | number;
-
 interface DeleteRequest {
-    id: ID;
+    id: string;
 }
 
 const handler = async (event: DeleteRequest, _context: Context) => {

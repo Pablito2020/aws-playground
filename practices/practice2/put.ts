@@ -1,11 +1,9 @@
 import { DynamoDB } from "aws-sdk";
 import { Context } from "aws-lambda";
 
-type ID = string | number;
-
 interface PutRequest {
-  id: ID;
-  data: object;
+  id: string;
+  data: any;
 }
 
 const handler = async (event: PutRequest, _context: Context) => {

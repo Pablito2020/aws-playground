@@ -1,6 +1,6 @@
-import { DynamoDB } from "aws-sdk";
-import { Context } from "aws-lambda";
-import { GetItemOutput } from "aws-sdk/clients/dynamodb";
+import {DynamoDB} from "aws-sdk";
+import {Context} from "aws-lambda";
+import {GetItemOutput} from "aws-sdk/clients/dynamodb";
 
 interface GetRequest {
     id: string;
@@ -14,8 +14,7 @@ const handler = async (event: GetRequest, _context: Context): Promise<GetItemOut
             "id": event.id
         },
     };
-    const data = await client.get(params).promise()
-    return data
+    return await client.get(params).promise()
 };
 
 export { handler };

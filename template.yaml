@@ -15,6 +15,10 @@ Globals:
 
 Resources:
 
+  ###########################################
+  #             Practice 2                  #
+  ###########################################
+
   Dynamodb:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -133,3 +137,59 @@ Resources:
       Handler: get.handler
       CodeUri: dist/practice2
       Role: !GetAtt LambdaGetDynamodbRole.Arn
+
+
+###########################################
+#             Practice 3                  #
+###########################################
+
+  Player1Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-1-lambda'
+      CodeUri: dist/practice3
+      Handler: player1.handler
+      Runtime: nodejs12.x
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Resource: '*'
+              Action:
+                - events:PutEvents
+
+  # create the eventbus for ping pong
+  PingPongEventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: "PingPongEventBus"
+
+  # Define the event pattern, specify the patterns, and the bus used
+  Player1EventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Player 1 Event Rule"
+      EventBusName: "PingPongEventBus"
+      EventPattern:
+        source:
+          - "player2"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn:
+            Fn::GetAtt:
+              - "Player1Lambda"
+              - "Arn"
+          Id: "player1ServiceTarget"
+
+  # Resource that grants permission to EventBridge to invoke the target.
+  Player1LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "Player1Lambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "Player1EventRule"
+          - "Arn"

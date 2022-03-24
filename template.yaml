@@ -158,17 +158,17 @@ Resources:
                 - events:PutEvents
 
   # create the eventbus for ping pong
-  PingPongEventBus:
+  pabloFraileEventBus:
     Type: AWS::Events::EventBus
     Properties:
-      Name: "PingPongEventBus"
+      Name: !Sub "${AWS::StackName}-event-bus"
 
   # Define the event pattern, specify the patterns, and the bus used
   Player1EventRule:
     Type: AWS::Events::Rule
     Properties:
       Description: "Player 1 Event Rule"
-      EventBusName: "PingPongEventBus"
+      EventBusName: !Sub "${AWS::StackName}-event-bus"
       EventPattern:
         source:
           - "player2"

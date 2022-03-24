@@ -3,6 +3,6 @@
     "Source": "player2",
     "DetailType": "ping-pong-event",
     "Detail": "{ \"round\": \"0\" }",
-    "EventBusName": "PingPongEventBus"
+    "EventBusName": "pablo-fraile-event-bus"
   }
 ]

@@ -1,6 +1,4 @@
-import {
-    Context, EventBridgeEvent,
-} from 'aws-lambda';
+import {Context, EventBridgeEvent,} from 'aws-lambda';
 import {EventBridge} from "aws-sdk";
 
 interface Match {
@@ -22,13 +20,13 @@ const handler = async (event: EventBridgeEvent<string, Match>, _context: Context
     }
 }
 
-function playerCanReturnBall():Boolean {
+function playerCanReturnBall(): Boolean {
     const number = getRandomInt(0, 10)
     console.log(`Random number is: ${number}`)
     return number <= 7
 }
 
-function getRandomInt(min: number, max:number) : number{
+function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;

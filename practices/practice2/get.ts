@@ -1,12 +1,12 @@
 import {DynamoDB} from "aws-sdk";
 import {Context} from "aws-lambda";
-import {GetItemOutput} from "aws-sdk/clients/dynamodb";
+import {AttributeMap} from "aws-sdk/clients/dynamodb";
 
 interface GetRequest {
     id: string;
 }
 
-const handler = async (event: GetRequest, _context: Context): Promise<GetItemOutput> => {
+const handler = async (event: GetRequest, _context: Context): Promise<AttributeMap | undefined> => {
     const client = new DynamoDB.DocumentClient();
     const params = {
         TableName: "pablo-fraile-dynamodb-table",
@@ -14,7 +14,8 @@ const handler = async (event: GetRequest, _context: Context): Promise<GetItemOut
             "id": event.id
         },
     };
-    return await client.get(params).promise()
+    const data = await client.get(params).promise()
+    return data.Item
 };
 
 export { handler };

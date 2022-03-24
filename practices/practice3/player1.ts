@@ -8,7 +8,8 @@ interface Match {
 const LATEST_ROUND = 9
 
 const handler = async (event: EventBridgeEvent<string, Match>, _context: Context): Promise<void> => {
-    const round = Number.parseInt(event.detail.round) + 1
+    const round = getRound(event)
+    console.log(`Current round is: ${round}`)
     if (round > LATEST_ROUND)
         console.log(`Error: Rounds are higher than ${LATEST_ROUND}`)
     else if (!playerCanReturnBall()) {
@@ -18,6 +19,15 @@ const handler = async (event: EventBridgeEvent<string, Match>, _context: Context
         const data = await sendPlayerEvent(round)
         console.log(data)
     }
+}
+
+function getRound(event: EventBridgeEvent<string, Match>): number {
+    const round = event.detail.round
+    const roundNumber: number = Number(round)
+    if (isNaN(roundNumber))
+        return 1
+    else
+        return roundNumber + 1
 }
 
 function playerCanReturnBall(): Boolean {

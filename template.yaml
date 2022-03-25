@@ -157,6 +157,20 @@ Resources:
               Action:
                 - events:PutEvents
 
+  Player2Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-2-lambda'
+      CodeUri: dist/practice3
+      Handler: player2.handler
+      Runtime: nodejs12.x
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Resource: '*'
+              Action:
+                - events:PutEvents
+
   # create the eventbus for ping pong
   pabloFraileEventBus:
     Type: AWS::Events::EventBus
@@ -192,4 +206,35 @@ Resources:
       SourceArn:
         Fn::GetAtt:
           - "Player1EventRule"
+          - "Arn"
+
+  # Define the event pattern, specify the patterns, and the bus used
+  Player2EventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Player 2 Event Rule"
+      EventBusName: !Sub "${AWS::StackName}-event-bus"
+      EventPattern:
+        source:
+          - "player1"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn:
+            Fn::GetAtt:
+              - "Player2Lambda"
+              - "Arn"
+          Id: "player1ServiceTarget"
+
+  # Resource that grants permission to EventBridge to invoke the target.
+  Player2LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "Player2Lambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "Player2EventRule"
           - "Arn"

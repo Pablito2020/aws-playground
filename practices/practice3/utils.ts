@@ -27,11 +27,14 @@ function sendPlayerEvent(round: number, player: string): Promise<EventBridge.Put
     const eventBridge = new EventBridge()
     const detail = {round: round.toString()}
     const params = {
-        Entries: [{
-            Source: player,
-            Detail: JSON.stringify(detail),
-            DetailType: "ping-pong-event",
-        },]
+        Entries: [
+            {
+                Source: player.toString(),
+                DetailType: "ping-pong-event",
+                Detail: JSON.stringify(detail),
+                EventBusName: "pablo-fraile-event-bus"
+            },
+        ]
     }
     return eventBridge.putEvents(params).promise()
 }

@@ -8,7 +8,6 @@ Globals:
     Timeout: 30
     MemorySize: 1024
     Tracing: Active
-    TracingEnabled: true
     Environment:
       Variables:
         USERNAME: Jordi
